@@ -64,6 +64,14 @@ function! MkFoldSectionAdd()
     execute "normal! j" . l:headlength . "A-\<Esc>jj"
 endfunction
 
+function! MkFoldSectionUpdate()
+    substitute/\s\+$//e
+    let currline = getline('.')
+    let headlength = g:magickey_foldsectionlength - strlen(l:currline) - 1
+    call setline('.', l:currline)
+    execute "normal! A \<Esc>" . l:headlength . "A-\<Esc>"
+endfunction
+
 function! MkBumpCopyright()
     let curr_year = strftime("%Y")
     let prev_year = l:curr_year - 1
@@ -92,6 +100,10 @@ function! MagicKey()
         let l:cmd .= "MkFoldSectionAdd() "
         let l:nmatches += 1
     endif
+    if match(l:ln, '^' . MkFoldMarkerStart()) ># -1
+        let l:cmd .= "MkFoldSectionUpdate() "
+        let l:nmatches += 1
+    endif
     if match(l:ln, 'Copyright') ># -1
         let l:cmd .= "MkBumpCopyright() "
         let l:nmatches += 1
@@ -112,14 +124,22 @@ function! MagicKey()
         endfor
         echo ' '
         let inp = input("Select option number: ")
-        " TODO: Handle index errors
-        execute "call " . l:options[l:inp - 1]
+        let opt = get(l:options, l:inp -1, "none")
+        if l:opt !=# "none"
+            execute "call " . l:opt
+        else
+            echo ' '
+            echo "Invalid option"
+        endif
     else
         echo "MagicKey does not recognize content"
     endif
 endfunction
 
+
 command! FoldSectionAdd     call MkFoldSectionAdd()
+command! FoldSectionUpdate  call MkFoldSectionUpdate()
 command! BumpCopyright      call MkBumpCopyright()
+
 
 nnoremap <silent> <Return> :call MagicKey()<CR>
