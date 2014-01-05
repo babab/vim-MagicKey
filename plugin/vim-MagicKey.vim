@@ -22,6 +22,7 @@
 " '#' will be expanded to the comment char(s) of the filetype
 let g:magickey_foldmarker = '#++,#+-'
 let g:magickey_foldsectionlength = 78
+let g:magickey_rst_headers = {1: '*', 2: '=', 3: '-', 4: '.', 5: '"', 6: "'"}
 
 function! MkGetCommandChar()
     if &filetype ==# 'vim'
@@ -80,6 +81,7 @@ function! MkBumpCopyright()
     if match(l:ln, 'Copyright') ==# -1
         return 0
     elseif match(l:ln, l:curr_year) ># -1
+        echo "No need to bump copyright"
         return 0
     endif
 
@@ -88,6 +90,19 @@ function! MkBumpCopyright()
     elseif match(l:ln, l:prev_year) ># -1
         call setline('.', substitute(l:ln, l:prev_year,
                     \ l:prev_year . '-' . l:curr_year, ''))
+    endif
+endfunction
+
+function! MkMarkdownHeaderToRst()
+    if match(getline('.'), '^#.') ==# -1 | return 0 | endif
+
+    let nmatches = len(split(getline('.'), '#', 1)) - 1
+    let headingchar = get(g:magickey_rst_headers, l:nmatches, "none")
+    if l:headingchar !=# "none"
+        execute "normal! ^dwYpVr" . l:headingchar
+        echo "Expanded markdownheader to rst header h" . l:nmatches
+    else
+        echo "You can only use 1-6 dashes"
     endif
 endfunction
 
@@ -108,10 +123,13 @@ function! MagicKey()
         let l:cmd .= "MkBumpCopyright() "
         let l:nmatches += 1
     endif
+    if match(l:ln, '^#.') ># -1
+        let l:cmd .= "MkMarkdownHeaderToRst() "
+        let l:nmatches += 1
+    endif
 
     if l:nmatches ==# 1
         execute "call " . l:cmd
-        echom "MagicKey called " . l:cmd
     elseif l:nmatches >=# 2
         echo ' '
         echo 'MagicKey: ambigious content, choose action: '
@@ -136,10 +154,9 @@ function! MagicKey()
     endif
 endfunction
 
-
-command! FoldSectionAdd     call MkFoldSectionAdd()
-command! FoldSectionUpdate  call MkFoldSectionUpdate()
-command! BumpCopyright      call MkBumpCopyright()
-
+command! FoldSectionAdd         call MkFoldSectionAdd()
+command! FoldSectionUpdate      call MkFoldSectionUpdate()
+command! BumpCopyright          call MkBumpCopyright()
+command! MarkdownHeaderToRst    call MkMarkdownHeaderToRst()
 
 nnoremap <silent> <Return> :call MagicKey()<CR>
