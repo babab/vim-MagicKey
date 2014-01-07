@@ -19,10 +19,15 @@
 " Maintainer: Benjamin Althues <http://babab.nl/>
 " Version:    0.1
 
+"++ Settings -----------------------------------------------------------------
+
 " '#' will be expanded to the comment char(s) of the filetype
 let g:magickey_foldmarker = '#++,#+-'
 let g:magickey_foldsectionlength = 78
 let g:magickey_rst_headers = {1: '*', 2: '=', 3: '-', 4: '.', 5: '"', 6: "'"}
+
+"+----------------------------------------------------------------------------
+"++ Private functions --------------------------------------------------------
 
 function! s:GetCommentPrefix()
     if &l:filetype ==# 'html'
@@ -47,6 +52,9 @@ function! s:FoldMarkerEnd()
     let foldmarkers = split(g:magickey_foldmarker, ',')
     return substitute(l:foldmarkers[1], '#', s:GetCommentPrefix(), '')
 endfunction
+
+"+----------------------------------------------------------------------------
+"++ FoldSection functions ----------------------------------------------------
 
 function! MkFoldSectionAdd()
     let name = input("Section name: ")
@@ -73,6 +81,9 @@ function! MkFoldSectionUpdate()
     execute "normal! A \<Esc>" . l:headlength . "A-\<Esc>"
 endfunction
 
+"+----------------------------------------------------------------------------
+"++ BumpCopyright ------------------------------------------------------------
+
 function! MkBumpCopyright()
     let curr_year = strftime("%Y")
     let prev_year = l:curr_year - 1
@@ -93,6 +104,9 @@ function! MkBumpCopyright()
     endif
 endfunction
 
+"+----------------------------------------------------------------------------
+"++ Markdown / reStructuredText ----------------------------------------------
+
 function! MkMarkdownHeaderToRst()
     if match(getline('.'), '^#.') ==# -1 | return 0 | endif
 
@@ -105,6 +119,9 @@ function! MkMarkdownHeaderToRst()
         echo "You can only use 1-6 dashes"
     endif
 endfunction
+
+"+----------------------------------------------------------------------------
+"++ Main MagicKey() function -------------------------------------------------
 
 function! MagicKey()
     let cmd = ''
@@ -146,9 +163,14 @@ function! MagicKey()
     endif
 endfunction
 
+"+----------------------------------------------------------------------------
+"++ Commands and keymapping --------------------------------------------------
+
 command! FoldSectionAdd         call MkFoldSectionAdd()
 command! FoldSectionUpdate      call MkFoldSectionUpdate()
 command! BumpCopyright          call MkBumpCopyright()
 command! MarkdownHeaderToRst    call MkMarkdownHeaderToRst()
 
 nnoremap <silent> <Return> :call MagicKey()<CR>
+
+"+----------------------------------------------------------------------------
