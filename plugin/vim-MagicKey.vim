@@ -25,11 +25,16 @@ let g:magickey_foldsectionlength = 78
 let g:magickey_rst_headers = {1: '*', 2: '=', 3: '-', 4: '.', 5: '"', 6: "'"}
 
 function! s:GetCommentPrefix()
-    elseif &l:filetype ==# 'html' | return "<!--"
-    elseif &l:filetype ==# 'javascript' | return '//'
-    elseif &l:filetype ==# 'php' | return '//'
-    elseif &l:filetype ==# 'vim' | return '"'
-    else | return '#'
+    if &l:filetype ==# 'html'
+        return "<!--"
+    elseif &l:filetype ==# 'javascript'
+        return '//'
+    elseif &l:filetype ==# 'php'
+        return '//'
+    elseif &l:filetype ==# 'vim'
+        return '"'
+    else
+        return '#'
     endif
 endfunction
 
@@ -68,7 +73,6 @@ function! MkFoldSectionUpdate()
     execute "normal! A \<Esc>" . l:headlength . "A-\<Esc>"
 endfunction
 
-
 function! MkBumpCopyright()
     let curr_year = strftime("%Y")
     let prev_year = l:curr_year - 1
@@ -104,46 +108,38 @@ endfunction
 
 function! MagicKey()
     let cmd = ''
-    let nmatches = 0
     let ln = getline('.')
 
-    if match(l:ln, '^' . s:FoldMarkerEnd()) ># -1
-        let l:cmd .= "MkFoldSectionAdd() "
-        let l:nmatches += 1
-    endif
-    if match(l:ln, '^' . s:FoldMarkerStart()) ># -1
-        let l:cmd .= "MkFoldSectionUpdate() "
-        let l:nmatches += 1
-    endif
-    if match(l:ln, 'Copyright') ># -1
-        let l:cmd .= "MkBumpCopyright() "
-        let l:nmatches += 1
-    endif
-    if match(l:ln, '^#.') ># -1
-        let l:cmd .= "MkMarkdownHeaderToRst() "
-        let l:nmatches += 1
-    endif
+    let triggers = {}
+    let l:triggers['MkFoldSectionAdd()'] = '^' . s:FoldMarkerEnd()
+    let l:triggers['MkFoldSectionUpdate()'] = '^' . s:FoldMarkerStart()
+    let l:triggers['MkBumpCopyright()'] = 'Copyright'
+    let l:triggers['MkMarkdownHeaderToRst()'] = '^#.'
+
+    for [callable, pattern] in items(l:triggers)
+        if match(l:ln, pattern) ># -1
+            let l:cmd .= callable . ' '
+        endif
+    endfor
+
+    let options = split(l:cmd, ' ')
+    let nmatches = len(l:options)
 
     if l:nmatches ==# 1
         execute "call " . l:cmd
     elseif l:nmatches >=# 2
-        echo ' '
         echo 'MagicKey: ambigious content, choose action: '
-        echo ' '
-        let options = split(l:cmd, ' ')
         let nopt = 1
         for i in l:options
             echo 'Option '. l:nopt . ': ' . i
             let nopt += 1
         endfor
-        echo ' '
         let inp = input("Select option number: ")
         let opt = get(l:options, l:inp -1, "none")
-        if l:opt !=# "none"
-            execute "call " . l:opt
-        else
-            echo ' '
+        if l:opt ==# "none"
             echo "Invalid option"
+        else
+            execute "call " . l:opt
         endif
     else
         echo "MagicKey does not recognize content"
