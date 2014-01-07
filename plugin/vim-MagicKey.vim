@@ -24,42 +24,37 @@ let g:magickey_foldmarker = '#++,#+-'
 let g:magickey_foldsectionlength = 78
 let g:magickey_rst_headers = {1: '*', 2: '=', 3: '-', 4: '.', 5: '"', 6: "'"}
 
-function! MkGetCommandChar()
-    if &filetype ==# 'vim'
-        return '"'
-    elseif &filetype ==# 'php'
-        return '//'
-    elseif &filetype ==# 'javascript'
-        return '//'
-    elseif &filetype ==# 'html'
-        return "<!--"
-    else
-        return '#'
+function! s:GetCommentPrefix()
+    elseif &l:filetype ==# 'html' | return "<!--"
+    elseif &l:filetype ==# 'javascript' | return '//'
+    elseif &l:filetype ==# 'php' | return '//'
+    elseif &l:filetype ==# 'vim' | return '"'
+    else | return '#'
     endif
 endfunction
 
-function! MkFoldMarkerStart()
+function! s:FoldMarkerStart()
     let foldmarkers = split(g:magickey_foldmarker, ',')
-    return substitute(l:foldmarkers[0], '#', MkGetCommandChar(), '')
+    return substitute(l:foldmarkers[0], '#', s:GetCommentPrefix(), '')
 endfunction
 
-function! MkFoldMarkerEnd()
+function! s:FoldMarkerEnd()
     let foldmarkers = split(g:magickey_foldmarker, ',')
-    return substitute(l:foldmarkers[1], '#', MkGetCommandChar(), '')
+    return substitute(l:foldmarkers[1], '#', s:GetCommentPrefix(), '')
 endfunction
 
 function! MkFoldSectionAdd()
     let name = input("Section name: ")
     if l:name ==# '' | echo "-- aborting --" | return 0 | endif
 
-    let tail = MkFoldMarkerEnd()
+    let tail = s:FoldMarkerEnd()
     let taillength = g:magickey_foldsectionlength - strlen(l:tail)
     call append('.', l:tail)
     execute "normal! j" . l:taillength . "A-\<Esc>k"
 
     call append('.', '') | call append('.', '') | call append('.', '')
 
-    let head = MkFoldMarkerStart() . ' ' . l:name . ' '
+    let head = s:FoldMarkerStart() . ' ' . l:name . ' '
     let headlength = g:magickey_foldsectionlength - strlen(l:head)
     call append('.', l:head)
     execute "normal! j" . l:headlength . "A-\<Esc>jj"
@@ -72,6 +67,7 @@ function! MkFoldSectionUpdate()
     call setline('.', l:currline)
     execute "normal! A \<Esc>" . l:headlength . "A-\<Esc>"
 endfunction
+
 
 function! MkBumpCopyright()
     let curr_year = strftime("%Y")
@@ -111,11 +107,11 @@ function! MagicKey()
     let nmatches = 0
     let ln = getline('.')
 
-    if match(l:ln, '^' . MkFoldMarkerEnd()) ># -1
+    if match(l:ln, '^' . s:FoldMarkerEnd()) ># -1
         let l:cmd .= "MkFoldSectionAdd() "
         let l:nmatches += 1
     endif
-    if match(l:ln, '^' . MkFoldMarkerStart()) ># -1
+    if match(l:ln, '^' . s:FoldMarkerStart()) ># -1
         let l:cmd .= "MkFoldSectionUpdate() "
         let l:nmatches += 1
     endif
