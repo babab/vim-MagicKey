@@ -163,7 +163,7 @@ function! MagicKey()
     endfor
 
     if &l:filetype ==# 'rst'
-        let l:triggers['MkMarkdownHeaderToRst()'] = '^#.'
+        let l:triggers['MkMarkdownHeaderToRst()'] = '^#\+.\a\+'
     endif
 
     for [callable, pattern] in items(l:triggers)
