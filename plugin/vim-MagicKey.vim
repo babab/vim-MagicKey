@@ -23,7 +23,7 @@
 
 " '#' will be expanded to the comment char(s) of the filetype
 let g:magickey_foldmarker = '#++,#+-'
-let g:magickey_foldsectionlength = 78
+let g:magickey_maxlinelength = 78
 let g:magickey_rst_headers = {1: '#', 2: '*', 3: '=', 4: '-', 5: '^', 6: '"'}
 let g:magickey_rulerchars = ['*', '=', '-', '.', '"', "'", '#', ':', '\^', '~']
 
@@ -62,14 +62,14 @@ function! MkFoldSectionAdd()
     if l:name ==# '' | echo "-- aborting --" | return 0 | endif
 
     let tail = s:FoldMarkerEnd()
-    let taillength = g:magickey_foldsectionlength - strlen(l:tail)
+    let taillength = g:magickey_maxlinelength - strlen(l:tail)
     call append('.', l:tail)
     execute "normal! j" . l:taillength . "A-\<Esc>k"
 
     call append('.', '') | call append('.', '') | call append('.', '')
 
     let head = s:FoldMarkerStart() . ' ' . l:name . ' '
-    let headlength = g:magickey_foldsectionlength - strlen(l:head)
+    let headlength = g:magickey_maxlinelength - strlen(l:head)
     call append('.', l:head)
     execute "normal! j" . l:headlength . "A-\<Esc>jj"
 endfunction
@@ -77,7 +77,7 @@ endfunction
 function! MkFoldSectionUpdate()
     substitute/\s\+$//e
     let currline = getline('.')
-    let headlength = g:magickey_foldsectionlength - strlen(l:currline) - 1
+    let headlength = g:magickey_maxlinelength - strlen(l:currline) - 1
     call setline('.', l:currline)
     execute "normal! A \<Esc>" . l:headlength . "A-\<Esc>"
 endfunction
@@ -121,7 +121,7 @@ function! MkHorizontalRuler(...)
         endfor
     endif
 
-    execute "normal! ^D" . g:magickey_foldsectionlength . "A"
+    execute "normal! ^D" . g:magickey_maxlinelength . "A"
         \ . l:fillchar . "\<Esc>"
 endfunction
 
