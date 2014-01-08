@@ -131,7 +131,10 @@ function! MagicKey()
     let l:triggers['MkFoldSectionAdd()'] = '^' . s:FoldMarkerEnd()
     let l:triggers['MkFoldSectionUpdate()'] = '^' . s:FoldMarkerStart()
     let l:triggers['MkBumpCopyright()'] = 'Copyright'
-    let l:triggers['MkMarkdownHeaderToRst()'] = '^#.'
+
+    if &l:filetype ==# 'rst'
+        let l:triggers['MkMarkdownHeaderToRst()'] = '^#.'
+    endif
 
     for [callable, pattern] in items(l:triggers)
         if match(l:ln, pattern) ># -1
