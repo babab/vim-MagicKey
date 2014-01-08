@@ -25,6 +25,7 @@
 let g:magickey_foldmarker = '#++,#+-'
 let g:magickey_foldsectionlength = 78
 let g:magickey_rst_headers = {1: '*', 2: '=', 3: '-', 4: '.', 5: '"', 6: "'"}
+let g:magickey_rulerchars = ['*', '=', '-', '.', '"', "'", '#', ':', '\^', '~']
 
 "+----------------------------------------------------------------------------
 "++ Private functions --------------------------------------------------------
@@ -105,6 +106,26 @@ function! MkBumpCopyright()
 endfunction
 
 "+----------------------------------------------------------------------------
+"++ Horizontal ruler ---------------------------------------------------------
+
+function! MkHorizontalRuler(...)
+    let fillchar = a:0 == 1 ? a:1 : 'none'
+
+    if l:fillchar ==# 'none'
+        for i in g:magickey_rulerchars
+            if len(substitute(getline('.'), '[' . i . ']', '', 'g')) ==# 0
+            \ && len(substitute(getline('.'), '[^' . i . ']', '', 'g')) ># 4
+                let l:fillchar = getline('.')[0]
+                break
+            endif
+        endfor
+    endif
+
+    execute "normal! ^D" . g:magickey_foldsectionlength . "A"
+        \ . l:fillchar . "\<Esc>"
+endfunction
+
+"+----------------------------------------------------------------------------
 "++ Markdown / reStructuredText ----------------------------------------------
 
 function! MkMarkdownHeaderToRst()
@@ -131,6 +152,15 @@ function! MagicKey()
     let l:triggers['MkFoldSectionAdd()'] = '^' . s:FoldMarkerEnd()
     let l:triggers['MkFoldSectionUpdate()'] = '^' . s:FoldMarkerStart()
     let l:triggers['MkBumpCopyright()'] = 'Copyright'
+
+    for i in g:magickey_rulerchars
+        if len(substitute(getline('.'), '[' . i . ']', '', 'g')) ==# 0
+        \ && len(substitute(getline('.'), '[^' . i . ']', '', 'g')) ># 4
+            let l:fillchar = getline('.')[0]
+            let l:triggers["MkHorizontalRuler('" . l:fillchar . "')"] = '^.'
+            break
+        endif
+    endfor
 
     if &l:filetype ==# 'rst'
         let l:triggers['MkMarkdownHeaderToRst()'] = '^#.'
@@ -172,6 +202,7 @@ endfunction
 command! FoldSectionAdd         call MkFoldSectionAdd()
 command! FoldSectionUpdate      call MkFoldSectionUpdate()
 command! BumpCopyright          call MkBumpCopyright()
+command! HorizontalRuler        call MkHorizontalRuler()
 command! MarkdownHeaderToRst    call MkMarkdownHeaderToRst()
 
 nnoremap <silent> <Return> :call MagicKey()<CR>
