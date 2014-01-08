@@ -24,7 +24,7 @@
 " '#' will be expanded to the comment char(s) of the filetype
 let g:magickey_foldmarker = '#++,#+-'
 let g:magickey_foldsectionlength = 78
-let g:magickey_rst_headers = {1: '*', 2: '=', 3: '-', 4: '.', 5: '"', 6: "'"}
+let g:magickey_rst_headers = {1: '#', 2: '*', 3: '=', 4: '-', 5: '^', 6: '"'}
 let g:magickey_rulerchars = ['*', '=', '-', '.', '"', "'", '#', ':', '\^', '~']
 
 "+----------------------------------------------------------------------------
