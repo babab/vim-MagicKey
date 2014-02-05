@@ -1,6 +1,15 @@
 # vim-MagicKey
 
-Perform various actions depending on line content with a single key.
+A plugin for Vim for performing various common (at least to me) editing
+actions **with a single key**. The appropiate type of action to perform
+after pressing the MagicKey depends on line context and filetype.
+
+Magic actions:
+
+- Bump copyright headers
+- Create beautiful fold sections
+- Create horizontal rulers
+- Expand Markdown headers to reStructuredText (ft=rst *only*)
 
 ## Installing
 
@@ -13,6 +22,72 @@ If you don't (want to) use pathogen.vim or similar plugins you can source
 the vim-MagicKey.vim file in your `.vimrc` after downloading it.
 
     source /path/to/vim-MagicKey/plugin/vim-MagicKey.vim
+
+## What it does
+
+Whenever the `MagicKey()` function is called by pressing `<Return>`
+in normal mode (by default) it will scan the context around your
+cursor and decide which action to perform, taking the type of file in
+consideration.
+
+When multiple actions are applicable, MagicKey presents an options menu
+so you can choose the appropiate action.
+
+## Global actions
+
+These are actions that are always available. No matter what the current
+filetype is.
+
+### Bumping Copyright headers
+
+When the word `Copyright` is found it will bump the copyright by looking
+for the value of `strftime("%Y") - 1` in the context.
+
+    Before: # Copyright (c) 2013 Author Name <user@example.com>
+    After : # Copyright (c) 2013-2014 Author Name <user@example.com>
+
+    Before: # Copyright (c) 2009-2013 Author Name <user@example.com>
+    After : # Copyright (c) 2009-2014 Author Name <user@example.com>
+
+It will not bump the copyright when the time overlaps more then a year.
+
+    Before: # Copyright (c) 2014 Author Name <user@example.com>
+    After : # Copyright (c) 2014 Author Name <user@example.com>
+
+    Before: # Copyright (c) 2012 Author Name <user@example.com>
+    After : # Copyright (c) 2012 Author Name <user@example.com>
+
+This feature is also available through this command and function:
+
+- Command: `BumpCopyright`
+- Function: `MkBumpCopyright()`
+
+### Horizontal Ruler
+
+You can expand a stream of chars to a horizontal ruler by using MagicKey
+on any line that contains a stream of >= 5 *rulerchars*.
+
+    Before: -------
+    After : ------------------------------------------------------------------------------
+
+The type of chars can be altered and are defined as:
+
+    let g:magickey_rulerchars = ['*', '=', '-', '.', '"', "'", '#', ':', '\^', '~']
+
+The ruler char will be copied to each column in the line up to a max
+width of `g:magickey_maxlinelength` columns. The default value is `78`.
+
+This feature is also available through this command and function:
+
+- Command: `HorizontalRuler`
+- Function: `MkHorizontalRuler(...)`
+
+The HorizontalRuler command and calling `MkHorizontalRuler` without
+arguments work the same as using it via the MagicKey. It will use the
+char found in the first column to expand the line.
+
+The `MkHorizontalRuler` also accepts an optional argument which should
+be a single char, which is then used to expand.
 
 ## License
 
