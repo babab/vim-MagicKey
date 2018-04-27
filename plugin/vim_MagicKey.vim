@@ -142,6 +142,24 @@ function! MkMarkdownHeaderToRst()
 endfunction
 
 "+----------------------------------------------------------------------------
+"++ Python functions ---------------------------------------------------------
+
+" Add plugin to path
+python import sys
+python import vim
+python sys.path.append(vim.eval('expand("<sfile>:h")'))
+
+function! TemplateExample()
+python << endOfPython
+
+from vim_MagicKey import vim_MagicKey_example
+
+print(vim_MagicKey_example())
+
+endOfPython
+endfunction
+
+"+----------------------------------------------------------------------------
 "++ Main MagicKey() function -------------------------------------------------
 
 function! MagicKey()
@@ -152,6 +170,7 @@ function! MagicKey()
     let l:triggers['MkFoldSectionAdd()'] = '^' . s:FoldMarkerEnd()
     let l:triggers['MkFoldSectionUpdate()'] = '^' . s:FoldMarkerStart()
     let l:triggers['MkBumpCopyright()'] = 'Copyright'
+    let l:triggers['TemplateExample()'] = 'Example'
 
     for i in g:magickey_rulerchars
         if len(substitute(getline('.'), '[' . i . ']', '', 'g')) ==# 0

@@ -13,15 +13,19 @@ Magic actions:
 
 ## Installing
 
-Installing is really simple if you use pathogen.vim
+Use your plugin manager of choice.
 
-    $ cd ~/.vim/bundle
-    $ git clone git://github.com/babab/vim-MagicKey.git
-
-If you don't (want to) use pathogen.vim or similar plugins you can source
-the vim-MagicKey.vim file in your `.vimrc` after downloading it.
-
-    source /path/to/vim-MagicKey/plugin/vim-MagicKey.vim
+- [Pathogen](https://github.com/tpope/vim-pathogen)
+  - `git clone https://github.com/babab/vim-MagicKey ~/.vim/bundle/vim-MagicKey`
+- [Vundle](https://github.com/gmarik/vundle)
+  - Add `Bundle 'https://github.com/babab/vim-MagicKey'` to .vimrc
+  - Run `:BundleInstall`
+- [NeoBundle](https://github.com/Shougo/neobundle.vim)
+  - Add `NeoBundle 'https://github.com/babab/vim-MagicKey'` to .vimrc
+  - Run `:NeoBundleInstall`
+- [vim-plug](https://github.com/junegunn/vim-plug)
+  - Add `Plug 'https://github.com/babab/vim-MagicKey'` to .vimrc
+  - Run `:PlugInstall`
 
 ## What it does
 
