@@ -174,8 +174,8 @@ function! MagicKey()
     let l:triggers['MkFoldSectionAdd()'] = '^' . s:FoldMarkerEnd()
     let l:triggers['MkFoldSectionUpdate()'] = '^' . s:FoldMarkerStart()
     let l:triggers['MkBumpCopyright()'] = 'Copyright'
-    let l:triggers['MkRunCommand()'] = '^run:'
-    let l:triggers['MkReplaceInAllBuffers()'] = '^replace:'
+    let l:triggers['MkRunCommand()'] = '^run: '
+    let l:triggers['MkReplaceInAllBuffers()'] = '^replace: '
 
     for i in g:magickey_rulerchars
         if len(substitute(getline('.'), '[' . i . ']', '', 'g')) ==# 0

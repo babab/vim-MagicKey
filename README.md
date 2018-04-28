@@ -97,7 +97,7 @@ be a single char, which is then used to expand.
 
 ### Execute current line text as command
 
-When the current line starts with `run:`, the remaining text will be
+When the current line starts with `run: `, the remaining text will be
 executed as a Vim command.
 
 Example:
@@ -111,7 +111,7 @@ This feature is also available through this command and function:
 
 ### Replace in all buffers (alias for ":bufdo %s/{content}/gce | update"
 
-When the current line starts with `replace:`, the remaining text will be
+When the current line starts with `replace: `, the remaining text will be
 pasted into a command that substitutes over all open buffers.
 
 Example:
