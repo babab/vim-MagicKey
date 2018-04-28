@@ -17,7 +17,7 @@
 " OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 " Maintainer: Benjamin Althues <http://babab.nl/>
-" Version:    0.1
+" Version:    0.2
 
 "++ Settings -----------------------------------------------------------------
 
@@ -142,20 +142,24 @@ function! MkMarkdownHeaderToRst()
 endfunction
 
 "+----------------------------------------------------------------------------
-"++ Python functions ---------------------------------------------------------
+"++ Python functions from vim_MagicKey.py ------------------------------------
 
 " Add plugin to path
 python import sys
 python import vim
 python sys.path.append(vim.eval('expand("<sfile>:h")'))
 
-function! TemplateExample()
+function! MkRunCommand()
 python << endOfPython
+from vim_MagicKey import MkRunCommand
+MkRunCommand(vim)
+endOfPython
+endfunction
 
-from vim_MagicKey import vim_MagicKey_example
-
-print(vim_MagicKey_example())
-
+function! MkReplaceInAllBuffers()
+python << endOfPython
+from vim_MagicKey import MkReplaceInAllBuffers
+MkReplaceInAllBuffers(vim)
 endOfPython
 endfunction
 
@@ -170,7 +174,8 @@ function! MagicKey()
     let l:triggers['MkFoldSectionAdd()'] = '^' . s:FoldMarkerEnd()
     let l:triggers['MkFoldSectionUpdate()'] = '^' . s:FoldMarkerStart()
     let l:triggers['MkBumpCopyright()'] = 'Copyright'
-    let l:triggers['TemplateExample()'] = 'Example'
+    let l:triggers['MkRunCommand()'] = '^run:'
+    let l:triggers['MkReplaceInAllBuffers()'] = '^replace:'
 
     for i in g:magickey_rulerchars
         if len(substitute(getline('.'), '[' . i . ']', '', 'g')) ==# 0
@@ -223,6 +228,8 @@ command! FoldSectionUpdate      call MkFoldSectionUpdate()
 command! BumpCopyright          call MkBumpCopyright()
 command! HorizontalRuler        call MkHorizontalRuler()
 command! MarkdownHeaderToRst    call MkMarkdownHeaderToRst()
+command! RunCommand             call MkRunCommand()
+command! ReplaceInAllBuffers    call MkReplaceInAllBuffers()
 
 nnoremap <silent> <Return> :call MagicKey()<CR>
 

@@ -10,6 +10,8 @@ Magic actions:
 - Create beautiful fold sections
 - Create horizontal rulers
 - Expand Markdown headers to reStructuredText (ft=rst *only*)
+- Run a command from buffer text
+- Quickly substitute text in all buffers
 
 ## Installing
 
@@ -92,6 +94,38 @@ char found in the first column to expand the line.
 
 The `MkHorizontalRuler` also accepts an optional argument which should
 be a single char, which is then used to expand.
+
+### Execute current line text as command
+
+When the current line starts with `run:`, the remaining text will be
+executed as a Vim command.
+
+Example:
+
+    run: %s/croccet/correct/gc
+
+This feature is also available through this command and function:
+
+- Command: `MkRunCommand`
+- Function: `MkRunCommand()`
+
+### Replace in all buffers (alias for ":bufdo %s/{content}/gce | update"
+
+When the current line starts with `replace:`, the remaining text will be
+pasted into a command that substitutes over all open buffers.
+
+Example:
+
+    replace: croccet/correct
+
+The above line will result in the command:
+
+    :bufdo %s/croccet/correct/gce | update
+
+This feature is also available through this command and function:
+
+- Command: `ReplaceInAllBuffers`
+- Function: `MkReplaceInAllBuffers()`
 
 ## License
 
