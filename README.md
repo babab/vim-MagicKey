@@ -49,16 +49,16 @@ filetype is.
 When the word `Copyright` is found it will bump the copyright by looking
 for the value of `strftime("%Y") - 1` in the context.
 
-    Before: # Copyright (c) 2013 Author Name <user@example.com>
-    After : # Copyright (c) 2013-2014 Author Name <user@example.com>
+    Before: # Copyright (c) 2017 Author Name <user@example.com>
+    After : # Copyright (c) 2017-2018 Author Name <user@example.com>
 
-    Before: # Copyright (c) 2009-2013 Author Name <user@example.com>
-    After : # Copyright (c) 2009-2014 Author Name <user@example.com>
+    Before: # Copyright (c) 2009-2017 Author Name <user@example.com>
+    After : # Copyright (c) 2009-2018 Author Name <user@example.com>
 
 It will not bump the copyright when the time overlaps more then a year.
 
-    Before: # Copyright (c) 2014 Author Name <user@example.com>
-    After : # Copyright (c) 2014 Author Name <user@example.com>
+    Before: # Copyright (c) 2016 Author Name <user@example.com>
+    After : # Copyright (c) 2016 Author Name <user@example.com>
 
     Before: # Copyright (c) 2012 Author Name <user@example.com>
     After : # Copyright (c) 2012 Author Name <user@example.com>
@@ -121,7 +121,7 @@ The above line will result in the command:
 
 ## License
 
-Copyright (c) 2014 Benjamin Althues <benjamin@babab.nl>
+Copyright (c) 2014-2018  Benjamin Althues <benjamin@babab.nl>
 
 Permission to use, copy, modify, and distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
