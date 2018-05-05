@@ -97,17 +97,14 @@ be a single char, which is then used to expand.
 
 ### Execute current line text as command
 
-When the current line starts with `# mkrun: `, the remaining text will be
-executed as a Vim command.
+When the current line starts with `# mkrun: `, the remaining text will
+be executed as an Ex command. Because Ex commands always start with `:`,
+this is added implicitly and any leading `:` characters added by the
+user will be stripped.
 
 Example:
 
-    run: %s/croccet/correct/gc
-
-This feature is also available through this command and function:
-
-- Command: `MkRunCommand`
-- Function: `MkRunCommand()`
+    # mkrun: !python %
 
 ### Replace in all buffers (alias for ":bufdo %s/{content}/gce | update"
 
@@ -121,11 +118,6 @@ Example:
 The above line will result in the command:
 
     :bufdo %s/croccet/correct/gce | update
-
-This feature is also available through this command and function:
-
-- Command: `ReplaceInAllBuffers`
-- Function: `MkReplaceInAllBuffers()`
 
 ## License
 
