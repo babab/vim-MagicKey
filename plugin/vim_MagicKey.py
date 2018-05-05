@@ -16,12 +16,14 @@
 
 
 def MkRunCommand(vim):
-    command = vim.current.line.split('run: ')[1].lstrip(':')
+    '''Run a vim command from text'''
+    command = vim.current.line.split('# mkrun: ')[1].lstrip(':')
     vim.command(command)
 
 
-def MkReplaceInAllBuffers(vim):
-    string = vim.current.line.split('replace: ')[1]
+def MkReplace(vim):
+    '''Substitute text in all buffers'''
+    string = vim.current.line.split('# mkreplace: ')[1]
     if string.count('/') > 1:
         print('Please specify a single "/" as separator, >1 is not supported')
         return

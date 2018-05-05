@@ -148,19 +148,14 @@ endfunction
 python import sys
 python import vim
 python sys.path.append(vim.eval('expand("<sfile>:h")'))
+python import vim_MagicKey
 
 function! MkRunCommand()
-python << endOfPython
-from vim_MagicKey import MkRunCommand
-MkRunCommand(vim)
-endOfPython
+    python vim_MagicKey.MkRunCommand(vim)
 endfunction
 
-function! MkReplaceInAllBuffers()
-python << endOfPython
-from vim_MagicKey import MkReplaceInAllBuffers
-MkReplaceInAllBuffers(vim)
-endOfPython
+function! MkReplace()
+    python vim_MagicKey.MkReplace(vim)
 endfunction
 
 "+----------------------------------------------------------------------------
@@ -174,8 +169,8 @@ function! MagicKey()
     let l:triggers['MkFoldSectionAdd()'] = '^' . s:FoldMarkerEnd()
     let l:triggers['MkFoldSectionUpdate()'] = '^' . s:FoldMarkerStart()
     let l:triggers['MkBumpCopyright()'] = 'Copyright'
-    let l:triggers['MkRunCommand()'] = '^run: '
-    let l:triggers['MkReplaceInAllBuffers()'] = '^replace: '
+    let l:triggers['MkRunCommand()'] = '^# mkrun: '
+    let l:triggers['MkReplace()'] = '^# mkreplace: '
 
     for i in g:magickey_rulerchars
         if len(substitute(getline('.'), '[' . i . ']', '', 'g')) ==# 0
@@ -229,7 +224,7 @@ command! BumpCopyright          call MkBumpCopyright()
 command! HorizontalRuler        call MkHorizontalRuler()
 command! MarkdownHeaderToRst    call MkMarkdownHeaderToRst()
 command! RunCommand             call MkRunCommand()
-command! ReplaceInAllBuffers    call MkReplaceInAllBuffers()
+command! ReplaceInAllBuffers    call MkReplace()
 
 nnoremap <silent> <Return> :call MagicKey()<CR>
 
