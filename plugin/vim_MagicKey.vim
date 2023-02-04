@@ -17,7 +17,7 @@
 " OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 " Maintainer: Benjamin Althues <http://babab.nl/>
-" Version:    0.2
+" Version:    0.3
 
 "++ Settings -----------------------------------------------------------------
 
@@ -145,17 +145,17 @@ endfunction
 "++ Python functions from vim_MagicKey.py ------------------------------------
 
 " Add plugin to path
-python import sys
-python import vim
-python sys.path.append(vim.eval('expand("<sfile>:h")'))
-python import vim_MagicKey
+python3 import sys
+python3 import vim
+python3 sys.path.append(vim.eval('expand("<sfile>:h")'))
+python3 import vim_MagicKey
 
 function! MkRunCommand()
-    python vim_MagicKey.MkRunCommand(vim)
+    python3 vim_MagicKey.MkRunCommand(vim)
 endfunction
 
 function! MkReplace()
-    python vim_MagicKey.MkReplace(vim)
+    python3 vim_MagicKey.MkReplace(vim)
 endfunction
 
 "+----------------------------------------------------------------------------
