@@ -2,7 +2,7 @@
 "
 " Vim MagicKey plugin - Perform various actions depending on line content
 "
-" Copyright (c) 2014-2018  Benjamin Althues <benjamin@babab.nl>
+" Copyright (c) 2014-2023  Benjamin Althues <benjamin@babab.nl>
 "
 " Permission to use, copy, modify, and distribute this software for any
 " purpose with or without fee is hereby granted, provided that the above
